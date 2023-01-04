@@ -60,3 +60,36 @@ export const HistoryList = styled.div`
     }
   }
 `;
+
+// Foi criado o objeto, TS ao ler esse objeto ele etende suas chaves e o valor é um texto
+// podendo ser qualuer texto - para se dizer que esse texto sempre sera um desses 3 valores
+// deve se utilizar o "as const" que ficara definido - anotar no notion com prints sem e com const
+// Ele assim ficara encontrando os intens de acordo com oque foi definido no tema
+const STATUS_COLORS = {
+  yellow: "yellow-500",
+  green: "green-500",
+  red: "red-500",
+} as const;
+
+// Assim se torna mais facil adicionar qualquer nova cor que esteja no tema
+interface StatusProps {
+  statusColor: keyof typeof STATUS_COLORS;
+}
+
+// interface StatusProps {
+//     statusColor: "yellow" | "red" | "green";
+// }
+
+export const Status = styled.span<StatusProps>`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: ${(props) => props.theme[STATUS_COLORS[props.statusColor]]};
+  }
+`;
