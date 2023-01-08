@@ -1,5 +1,6 @@
 import { differenceInSeconds } from "date-fns";
 import { useEffect, useState } from "react";
+
 import { CountdownContainer, Separator } from "./styles";
 
 interface CountdownProps {
