@@ -4,7 +4,6 @@ export const FormContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-
   justify-content: center;
   gap: 0.5rem;
   color: ${(props) => props.theme["gray-100"]};
