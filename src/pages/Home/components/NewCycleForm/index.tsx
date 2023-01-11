@@ -1,31 +1,11 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as zod from "zod";
-// npm i @hookform/resolvers
-
 import { FormContainer, MinutesAmountInput, TaskInput } from "./styles";
-
-// Validando um objeto
-const newCycleFormValidationSchema = zod.object({
-  task: zod.string().min(1, "Informe a tarefa"),
-  minutesAmount: zod
-    .number()
-    .min(1, "O ciclo precisa ser de no mínimo 60 minutos.")
-    .max(60, "O ciclo precisa ser de no máximo 60 minutos."),
-});
-
-// Extrair a tipagem do form de dentro do schema de validação | infer => Automatizar o processo de definir a tipagem de algo
-// Referenciar uma variavel js dentro do ts deve se transforma-la em tipagem com typeof
-type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>; // inferiu o tipo do schema de valid
+import { useContext } from "react";
+import { useFormContext } from "react-hook-form";
+import { CyclesContext } from "../../../../contexts/CyclesContext";
 
 export function NewCycleForm() {
-  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
-    resolver: zodResolver(newCycleFormValidationSchema),
-    defaultValues: {
-      task: "",
-      minutesAmount: 0,
-    },
-  });
+  const { activeCycle } = useContext(CyclesContext);
+  const { register } = useFormContext();
 
   return (
     <FormContainer>
