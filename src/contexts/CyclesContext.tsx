@@ -1,3 +1,4 @@
+import differenceInSeconds from "date-fns/differenceInSeconds";
 import {
   createContext,
   ReactNode,
@@ -40,12 +41,36 @@ export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
   // state => valor atual em tempo real - action => acção que o user quer realizar algo unico para uma ação -> setCycles agora sera um metodo para disparar a action e nao para salvar um novo valor
-  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
-    cycles: [],
-    activeCycleId: null,
-  });
+  const [cyclesState, dispatch] = useReducer(
+    cyclesReducer,
+    {
+      cycles: [],
+      activeCycleId: null,
+    },
+    () => {
+      // Essa função é disparada assim que o reducer é criado para que os dados inicias sejam recuperados de outro lugar
+      // Dados ao setem inicializados como zerados, são preenchidos por esses
+      const storedStateAsJSON = localStorage.getItem(
+        "@ignite-timer:cycles-state-1.0.0"
+      );
 
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON);
+      }
+    }
+  );
+
+  const { cycles, activeCycleId } = cyclesState;
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  // Agora a diferença de segundos esta inciando com o valor real da diferença que começou ao inves de 0
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startDate));
+    }
+
+    return 0;
+  });
 
   // Salvar no storage
   useEffect(() => {
@@ -53,10 +78,6 @@ export function CyclesContextProvider({
 
     localStorage.setItem("@ignite-timer:cycles-state-1.0.0", stateJSON);
   }, [cyclesState]);
-
-  const { cycles, activeCycleId } = cyclesState;
-
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
   function setSecondsPassed(seconds: number) {
     setAmountSecondsPassed(seconds);
