@@ -22,7 +22,8 @@ export function Countdown() {
       interval = setInterval(() => {
         const secondsDifference = differenceInSeconds(
           new Date(),
-          activeCycle.startDate
+          // se nao for uma data ele converte, se for uma data não faz nada
+          new Date(activeCycle.startDate)
         );
 
         if (secondsDifference >= totalSeconds) {
