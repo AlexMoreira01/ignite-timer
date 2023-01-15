@@ -56,6 +56,14 @@ export function CyclesContextProvider({
 
       if (storedStateAsJSON) {
         return JSON.parse(storedStateAsJSON);
+      } else {
+        const cycleStateNull = {
+          cycles: [],
+          activeCycleId: null,
+        };
+
+        const stateJsonNull = JSON.stringify(cycleStateNull);
+        localStorage.setItem("@ignite-timer:cycles-state-1.0.0", stateJsonNull);
       }
     }
   );
